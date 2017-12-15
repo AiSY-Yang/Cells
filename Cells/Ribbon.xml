@@ -2,15 +2,44 @@
 <customUI onLoad="Ribbon_Load" xmlns="http://schemas.microsoft.com/office/2006/01/customui">
     <ribbon>
         <tabs>
-            <tab idMso="TabAddIns" label="Cells">
+            <tab idMso="TabAddIns">
                 <group id="group1" label="group1">
-                    <checkBox id="Light" onAction="Light_Click" label="聚光灯" />
+                    <checkBox id="Light" onAction="Light_Click" label="聚光灯"/>
                 </group>
-                <group id="group2" label="group2">
-                    <editBox id="editBox1" label="同类项列" showImage="false" />
-                    <editBox id="editBox2" label="并列项列" showImage="false" />
-                    <button id="button1" onAction="Button1_Click" label="并列同类项" showImage="false" />
-                    <button id="button2" label="button2" showImage="false" />
+                <group id="group2" label="并列同类项">
+                    <box id="box1" boxStyle="vertical">
+                        <editBox id="editBox1" label="同类项列" showImage="false" />
+                        <editBox id="editBox2" label="并列项列" showImage="false" />
+                        <comboBox id="splitChar" label="分隔符 " showImage="false">
+                            <item id="__id30" label="Tab(并列)" />
+                            <item id="__id31" label="Space(空格)" />
+                            <item id="__id32" label="-" />
+                            <item id="__id33" label="," />
+                        </comboBox>
+                    </box>
+                    <separator id="separator1" />
+                    <button id="concatenation" onAction="Concatenation_Click" supertip="主要用于一个条件匹配多个结果" label="执行" size="large" />
+                </group>
+                <group id="group3" label="单元格对齐">
+                    <button id="button1" onAction="SameFormat" supertip="选中当前工作表内同一种文字颜色及底色的所有单元格" label="选中同色单元格" showImage="false" />
+                    <button id="ctrlL" onAction="Align_Click" supertip="向左对齐所有单元格" label=" 单元格左对齐" showImage="false" />
+                    <button id="ctrlR" onAction="Align_Click" supertip="向右对其所有单元格" label=" 单元格右对齐" showImage="false" />
+                </group>
+                <group id="group4" label="添加/删除前后缀">
+                    <editBox id="Prefix" label="前缀" showImage="false" />
+                    <editBox id="Suffix" label="后缀" showImage="false" />
+                    <buttonGroup id="buttonGroup1">
+                        <button id="Add" onAction="Affix" label="添加" showImage="false" />
+                        <button id="Sub" onAction="Affix" label="删除" showImage="false" />
+                        <button id="DelChar" onAction="Affix" label="按位清除" showImage="false" />
+                    </buttonGroup>
+                </group>
+                <group id="group5" label="group5">
+                    <splitButton id="splitButton1">
+                        <button id="splitButton1__btn" label="splitButton1" />
+                        <menu id="splitButton1__mnu" />
+                    </splitButton>
+                    <toggleButton id="toggleButton1" onAction="toggleButton1_Click" label="toggleButton1" showImage="false" />
                 </group>
             </tab>
         </tabs>

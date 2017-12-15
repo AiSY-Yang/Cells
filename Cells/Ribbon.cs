@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.Office.Core;
+using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -52,6 +55,7 @@ namespace Cells
 		public void Ribbon_Load(Office.IRibbonUI ribbonUI)
 		{
 			this.ribbon = ribbonUI;
+
 		}
 
 		#endregion
@@ -77,7 +81,34 @@ namespace Cells
 			}
 			return null;
 		}
+		void Light_Click(IRibbonControl control, bool pressed)
+		{
+			Color lightColor = Color.FromArgb(34, 116, 71);
+			CheckBox checkBox =(CheckBox) control;
+			if (pressed)
+			{
+				if (System.Windows.Forms.MessageBox.Show("确认开启聚光灯功能么？这个功能将会影响撤销功能", "警告", System.Windows.Forms.MessageBoxButtons.OKCancel, System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+				{
+					Globals.ThisAddIn.Application.SheetSelectionChange += Application_SheetSelectionChange;
+					Globals.ThisAddIn.Application.Selection.EntireRow.Interior.Color = lightColor;
+					Globals.ThisAddIn.Application.Selection.EntireColumn.Interior.Color = lightColor;
+				}
+				else
+				{
+					checkBox.Value = false;
+				}
+			}
+			else
+			{
+				System.Windows.Forms.MessageBox.Show("0");
+				Globals.ThisAddIn.Application.Cells.Interior.ColorIndex = -4142;
+			}
+		}
 
+		private void Application_SheetSelectionChange(object Sh, Range Target)
+		{
+			throw new NotImplementedException();
+		}
 		#endregion
 	}
 }
