@@ -205,12 +205,6 @@
     <EmbeddedResource Include="Ribbon.xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Exec.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\新建位图图像.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Ribbon1.xml" />
   </ItemGroup>
   <PropertyGroup>

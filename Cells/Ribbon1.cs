@@ -16,6 +16,7 @@ namespace Cells
 		Excel.Application application;
 		public static Excel.Worksheet activeWorksheet;
 		Excel.Worksheet lastActiveWorksheet;
+		System.Diagnostics.Stopwatch stopwatch=new System.Diagnostics.Stopwatch();
 
 		private void Cells_Load(object sender, RibbonUIEventArgs e)
 		{
@@ -177,11 +178,11 @@ namespace Cells
 
 		private void SameFormat(object sender, RibbonControlEventArgs e)
 		{
+			stopwatch.Start();
 			//application.ScreenUpdating = false;
-			activeWorksheet = application.ActiveSheet;
-			Range cell = application.Selection;
-			Range selectRange = cell.Cells[1, 1];
-			foreach (Range item in activeWorksheet.UsedRange)
+			Range cell = application.ActiveCell;
+			Range selectRange = cell.Cells;
+			foreach (Range item in cell.CurrentRegion)
 			{
 				if (item.DisplayFormat.Font.Color == cell.DisplayFormat.Font.Color)
 				{
@@ -193,6 +194,8 @@ namespace Cells
 			}
 			selectRange.Select();
 			//application.ScreenUpdating = true;
+			stopwatch.Stop();
+			//MessageBox.Show(stopwatch.Elapsed.ToString());
 		}
 	}
 }
