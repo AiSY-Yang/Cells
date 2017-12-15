@@ -16,7 +16,7 @@ namespace Cells
 		Excel.Application application;
 		public static Excel.Worksheet activeWorksheet;
 		Excel.Worksheet lastActiveWorksheet;
-		System.Diagnostics.Stopwatch stopwatch=new System.Diagnostics.Stopwatch();
+		System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
 		private void Cells_Load(object sender, RibbonUIEventArgs e)
 		{
@@ -129,11 +129,20 @@ namespace Cells
 		private void Align_Click(object sender, RibbonControlEventArgs e)
 		{
 			activeWorksheet = application.ActiveSheet;
-			switch ((sender as RibbonButton).Label)
+
+			Range sel = application.Selection;
+			if (sel.Columns.Count > 123)
 			{
-				case "左对齐":
+				MessageBox.Show("列数过大,请重新选择区域");
+				return;
+			}
+
+			application.ScreenUpdating = false;
+			//application.ScreenUpdating = true;
+			switch ((sender as RibbonButton).Name)
+			{
+				case "ctrlL":
 					{
-						Range sel = application.Selection;
 						for (int i = sel.Row; i < sel.Row + sel.Rows.Count; i++)
 						{
 							Range cell = activeWorksheet.Cells[i, sel.Column];
@@ -151,9 +160,8 @@ namespace Cells
 						}
 						break;
 					}
-				case "右对齐":
+				case "ctrlR":
 					{
-						Range sel = application.Selection;
 						for (int i = sel.Row; i < sel.Row + sel.Rows.Count; i++)
 						{
 							Range cell = activeWorksheet.Cells[i, sel.Column + sel.Columns.Count - 1];
@@ -174,12 +182,14 @@ namespace Cells
 				default:
 					break;
 			}
+			//application.ScreenUpdating = false;
+			application.ScreenUpdating = true;
 		}
 
 		private void SameFormat(object sender, RibbonControlEventArgs e)
 		{
-			stopwatch.Start();
 			//application.ScreenUpdating = false;
+			//application.ScreenUpdating = true;
 			Range cell = application.ActiveCell;
 			Range selectRange = cell.Cells;
 			foreach (Range item in cell.CurrentRegion)
@@ -193,9 +203,7 @@ namespace Cells
 				}
 			}
 			selectRange.Select();
-			//application.ScreenUpdating = true;
-			stopwatch.Stop();
-			//MessageBox.Show(stopwatch.Elapsed.ToString());
+
 		}
 	}
 }
