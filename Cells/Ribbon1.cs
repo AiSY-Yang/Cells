@@ -1,5 +1,3 @@
-/*快捷键钩子*/
-//#define Hook
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +9,6 @@ using System.Drawing;
 using Microsoft.Office.Interop.Excel;
 using System.Windows.Forms;
 
-#if Hook
-using Hook;
-#endif
-
 namespace Cells
 {
 	public partial class Ribbon1
@@ -22,17 +16,15 @@ namespace Cells
 		Excel.Application application;
 		public static Excel.Worksheet activeWorksheet;
 		Excel.Worksheet lastActiveWorksheet;
-		System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+		System.Diagnostics.Stopwatch stopwatch=new System.Diagnostics.Stopwatch();
 
 		private void Cells_Load(object sender, RibbonUIEventArgs e)
 		{
-			InitializeComponent();
 			application = Globals.ThisAddIn.Application;
 			Globals.ThisAddIn.Application.SheetSelectionChange += Application_SheetSelectionChange;
-
 		}
 		#region 聚光灯功能
-		Color lightColor = Color.FromArgb(34,116,71);
+		Color lightColor = Color.CadetBlue;
 		private void Light_Click(object sender, RibbonControlEventArgs e)
 		{
 			if (Light.Checked)
@@ -54,6 +46,7 @@ namespace Cells
 			}
 		}
 
+
 		private void Application_SheetSelectionChange(object Sh, Excel.Range Target)
 		{
 			if (activeWorksheet == application.ActiveSheet)
@@ -73,22 +66,16 @@ namespace Cells
 			//以下命令为撤销时显示的命令 暂时无法完成撤销功能
 			//application.OnUndo("聚光灯", "FunctionName");
 		}
+
 		#endregion
-		/// <summary>
-		/// 并列同类项功能 处理能力大约1W/Min
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
+		#region 并列同类项功能
 		private void Concatenation_Click(object sender, RibbonControlEventArgs e)
 		{
-			application.ScreenUpdating = false;
-			//application.ScreenUpdating = true;
 			Excel.Worksheet worksheet = Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
 			Range eqrange = worksheet.Columns[editBox1.Text.ToUpper()];
 			Range neqrange = worksheet.Columns[editBox2.Text.ToUpper()];
 			int baseRow = 1;
-			int row = 2;	
-
+			int row = 2;
 			int compareColumn = eqrange.Column;
 			int column = neqrange.Column;
 			int deltaColumn = 1;
@@ -135,70 +122,24 @@ namespace Cells
 					cell = worksheet.Cells[row, compareColumn];
 				}
 			}
-			//application.ScreenUpdating = false;
-			application.ScreenUpdating = true;
-		}
-		#region 并列同类项功能重构-未完成
-		/// <summary>
-		/// 重构-未完成
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Concatenation_Click2(object sender, RibbonControlEventArgs e)
-		{
-			application.ScreenUpdating = false;
-			//application.ScreenUpdating = true;
-			Excel.Worksheet worksheet = Globals.ThisAddIn.Application.ActiveWorkbook.ActiveSheet;
-			Range eqrange = worksheet.Columns[editBox1.Text.ToUpper()];
-			Range neqrange = worksheet.Columns[editBox2.Text.ToUpper()];
 
-			foreach (Range basecell in eqrange)
-			{
-				Range nextcell = basecell.Offset[1, 0];
-				if (nextcell.Value = null)
-				{
-					break;
-				}
-
-			}
-
-			//application.ScreenUpdating = false;
-			application.ScreenUpdating = true;
 		}
 		#endregion
 
-		/// <summary>
-		/// 单元格对齐
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		private void Align_Click(object sender, RibbonControlEventArgs e)
 		{
 			activeWorksheet = application.ActiveSheet;
-
-			Range sel = application.Selection;
-			if (sel.Columns.Count > 123)
+			switch ((sender as RibbonButton).Label)
 			{
-				MessageBox.Show("列数过大,请重新选择区域");
-				return;
-			}
-			if (sel.Rows.Count > 567)
-			{
-				MessageBox.Show("行数过大,请重新选择区域");
-				return;
-			}
-
-			application.ScreenUpdating = false;
-			//application.ScreenUpdating = true;
-			switch ((sender as RibbonButton).Name)
-			{
-				case "ctrlL":
+				case "左对齐":
 					{
+						Range sel = application.Selection;
 						for (int i = sel.Row; i < sel.Row + sel.Rows.Count; i++)
 						{
 							Range cell = activeWorksheet.Cells[i, sel.Column];
 							for (int j = sel.Column; j < sel.Column + sel.Columns.Count; j++)
 							{
+
 								dynamic value = activeWorksheet.Cells[i, j].Value;
 								if (value != null)
 								{
@@ -210,8 +151,9 @@ namespace Cells
 						}
 						break;
 					}
-				case "ctrlR":
+				case "右对齐":
 					{
+						Range sel = application.Selection;
 						for (int i = sel.Row; i < sel.Row + sel.Rows.Count; i++)
 						{
 							Range cell = activeWorksheet.Cells[i, sel.Column + sel.Columns.Count - 1];
@@ -232,19 +174,12 @@ namespace Cells
 				default:
 					break;
 			}
-			//application.ScreenUpdating = false;
-			application.ScreenUpdating = true;
 		}
 
-		/// <summary>
-		/// 选中相同视觉颜色的单元格
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		private void SameFormat(object sender, RibbonControlEventArgs e)
 		{
+			stopwatch.Start();
 			//application.ScreenUpdating = false;
-			//application.ScreenUpdating = true;
 			Range cell = application.ActiveCell;
 			Range selectRange = cell.Cells;
 			foreach (Range item in cell.CurrentRegion)
@@ -258,76 +193,9 @@ namespace Cells
 				}
 			}
 			selectRange.Select();
-
-		}
-
-		///// <summary>
-		///// 前后缀功能
-		///// </summary>
-		///// <param name="sender"></param>
-		///// <param name="e"></param>
-		//private void Affix(object sender, RibbonControlEventArgs e)
-		//{
-		//	RibbonButton button = sender as RibbonButton;
-		//	Range sel = application.Selection;
-		//	if (sel.Columns.Count > 123)
-		//	{
-		//		MessageBox.Show("列数过大,请重新选择区域");
-		//		return;
-		//	}
-		//	if (sel.Rows.Count > 567)
-		//	{
-		//		MessageBox.Show("行数过大,请重新选择区域");
-		//		return;
-		//	}
-		//	switch (button.Name)
-		//	{
-		//		case "Add":
-		//			{
-		//				foreach (Range cell in sel)
-		//				{
-		//					cell.Value = Prefix.Text+ cell.Value;
-		//				}
-		//				break;
-		//			}
-
-		//		case "Sub":
-		//			{
-		//				foreach (Range cell in sel)
-		//				{
-		//					cell.Value = Suffix.Text + cell.Value;
-		//				}
-		//				break;
-		//			}
-
-		//		case "DelChar":
-		//			{
-
-		//				break;
-		//			}
-
-		//		default:
-		//			break;
-		//	}
-
-		//}
-
-		/// <summary>
-		/// 实验功能(未完成)
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void ToggleButton1_Click(object sender, RibbonControlEventArgs e)
-		{
-			Worksheet activeWorksheet = application.ActiveSheet;
-			Range range = activeWorksheet.Range["A:A"];
-
-
-
+			//application.ScreenUpdating = true;
+			stopwatch.Stop();
+			//MessageBox.Show(stopwatch.Elapsed.ToString());
 		}
 	}
-
 }
-#if Hook
-
-#endif

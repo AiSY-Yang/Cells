@@ -49,9 +49,10 @@ namespace Cells
 			this.separator1 = this.Factory.CreateRibbonSeparator();
 			this.concatenation = this.Factory.CreateRibbonButton();
 			this.group3 = this.Factory.CreateRibbonGroup();
-			this.button1 = this.Factory.CreateRibbonButton();
 			this.ctrlL = this.Factory.CreateRibbonButton();
 			this.ctrlR = this.Factory.CreateRibbonButton();
+			this.button1 = this.Factory.CreateRibbonButton();
+			this.colorDialog1 = new System.Windows.Forms.ColorDialog();
 			this.tab1.SuspendLayout();
 			this.group1.SuspendLayout();
 			this.group2.SuspendLayout();
@@ -144,13 +145,6 @@ namespace Cells
 			this.group3.Label = "单元格对齐";
 			this.group3.Name = "group3";
 			// 
-			// button1
-			// 
-			this.button1.Label = "选中同色单元格";
-			this.button1.Name = "button1";
-			this.button1.SuperTip = "选中当前工作表内同一种文字颜色及底色的所有单元格";
-			this.button1.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.SameFormat);
-			// 
 			// ctrlL
 			// 
 			this.ctrlL.Label = "单元格左对齐";
@@ -164,6 +158,13 @@ namespace Cells
 			this.ctrlR.Name = "ctrlR";
 			this.ctrlR.SuperTip = "向右对其所有单元格";
 			this.ctrlR.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.Align_Click);
+			// 
+			// button1
+			// 
+			this.button1.Label = "选中同色单元格";
+			this.button1.Name = "button1";
+			this.button1.SuperTip = "选中当前工作表内同一种文字颜色及底色的所有单元格";
+			this.button1.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.SameFormat);
 			// 
 			// Ribbon1
 			// 
@@ -199,6 +200,7 @@ namespace Cells
 		internal Microsoft.Office.Tools.Ribbon.RibbonGroup group3;
 		internal Microsoft.Office.Tools.Ribbon.RibbonButton ctrlL;
 		internal Microsoft.Office.Tools.Ribbon.RibbonButton ctrlR;
+		private System.Windows.Forms.ColorDialog colorDialog1;
 		internal Microsoft.Office.Tools.Ribbon.RibbonButton button1;
 	}
 
